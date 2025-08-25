@@ -1,0 +1,23 @@
+{
+  "train_rows": 214058,
+  "train_start": "2017-01-01",
+  "train_end": "2025-08-01",
+  "features_num": [
+    "floor_area_sqm",
+    "storey_mid",
+    "flat_age",
+    "remaining_lease_years"
+  ],
+  "features_cat": [
+    "town",
+    "flat_type",
+    "flat_model"
+  ],
+  "target": "resale_price",
+  "backtest_summary": {
+    "rows": 41,
+    "MAE_mean": 120344.05001530137,
+    "RMSE_mean": 29000883566.420048,
+    "MAPE_mean": 17.7336808162083
+  }
+}
