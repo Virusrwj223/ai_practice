@@ -5,3 +5,7 @@ lightgbm
 scikit-learn 
 numpy 
 joblib
+streamlit
+transformers
+torch            
+langgraph
