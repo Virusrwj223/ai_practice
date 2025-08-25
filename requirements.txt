@@ -1,3 +1,7 @@
 pandas 
 openpyxl 
 sqlalchemy
+lightgbm 
+scikit-learn 
+numpy 
+joblib
