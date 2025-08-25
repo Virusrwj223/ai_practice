@@ -42,6 +42,5 @@ if st.button("Run"):
         st.subheader("Low-supply proxy (lowest resale volume)")
         st.dataframe(pd.DataFrame(data["items"]))
 
-    st.markdown(res["answer"])
+    # st.markdown(res["answer"])
 
-st.caption("Tools have stable JSON signatures (A2A). Can be exposed via MCP later.")
