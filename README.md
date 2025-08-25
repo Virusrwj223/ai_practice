@@ -138,7 +138,7 @@ This ensures a clean machine can **reproduce the build**, **train**, and **pass 
 
 ---
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### Heuristics used
 
@@ -223,7 +223,7 @@ python -m pytest -q
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 data/
