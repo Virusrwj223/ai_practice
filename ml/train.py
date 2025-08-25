@@ -165,11 +165,12 @@ def train_and_save(df: pd.DataFrame):
         }
     }
 
-    ref = {}
-    ref["num_means"] = df[["floor_area_sqm","storey_mid","flat_age","remaining_lease_years"]].mean().to_dict()
-    ref["num_stds"]  = df[["floor_area_sqm","storey_mid","flat_age","remaining_lease_years"]].std().to_dict()
-    ref["cat_freqs_town"] = (df["town"].value_counts(normalize=True).to_dict())
-    ref["cat_freqs_flat_type"] = (df["flat_type"].value_counts(normalize=True).to_dict())
+    ref = {
+        "num_means": df[["floor_area_sqm","storey_low","storey_high","remaining_lease_months"]].mean().to_dict(),
+        "num_stds":  df[["floor_area_sqm","storey_low","storey_high","remaining_lease_months"]].std().to_dict(),
+        "cat_freqs_town": df["town"].value_counts(normalize=True).to_dict(),
+        "cat_freqs_flat_type": df["flat_type"].value_counts(normalize=True).to_dict(),
+    }
     meta["reference"] = ref
 
     (MODEL_DIR / "model_meta.json").write_text(json.dumps(meta, indent=2))

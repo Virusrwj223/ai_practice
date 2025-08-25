@@ -1,13 +1,15 @@
 # monitoring/telemetry.py
 import os, time, json, sqlite3
 from pathlib import Path
-from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 LOGS_DIR = ROOT / "logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 DB = LOGS_DIR / "telemetry.db"
+
+def _utc_now():
+    return datetime.now(timezone.utc).isoformat()
 
 def _init():
     con = sqlite3.connect(DB)
@@ -30,19 +32,19 @@ _init()
 def log_tool(tool:str, args:dict, ok:bool, ms:float, err:str|None=None):
     con = sqlite3.connect(DB); cur = con.cursor()
     cur.execute("INSERT INTO tool_calls VALUES (?,?,?,?,?,?)",
-                (datetime.utcnow().isoformat(), tool, json.dumps(args), int(ok), ms, err))
+                (_utc_now(), tool, json.dumps(args), int(ok), ms, err))
     con.commit(); con.close()
 
 def log_router(ok:bool, tool:str|None, raw:str, err:str|None=None):
     con = sqlite3.connect(DB); cur = con.cursor()
     cur.execute("INSERT INTO router_events VALUES (?,?,?,?,?)",
-                (datetime.utcnow().isoformat(), int(ok), tool, raw[:2000], err))
+                (_utc_now(), int(ok), tool, raw[:2000], err))
     con.commit(); con.close()
 
 def log_prediction(town, flat_type, band, resale, bto, income, model_version):
     con = sqlite3.connect(DB); cur = con.cursor()
     cur.execute("INSERT INTO predictions VALUES (?,?,?,?,?,?,?,?)",
-                (datetime.utcnow().isoformat(), town, flat_type, band, resale, bto, income, model_version))
+                (_utc_now(), town, flat_type, band, resale, bto, income, model_version))
     con.commit(); con.close()
 
 def timed(tool_name, args_snapshot:dict):

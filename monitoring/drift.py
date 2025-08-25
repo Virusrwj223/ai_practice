@@ -37,7 +37,7 @@ def compute_drift():
     ref = json.loads(META.read_text())
     latest = latest_month_view()
     out = {}
-    for col in ["floor_area_sqm","storey_mid","flat_age","remaining_lease_years"]:
+    for col in ["floor_area_sqm","storey_low","storey_high","remaining_lease_months"]:
         base_mean = ref["reference"]["num_means"][col]
         psi_val = psi(latest[col].to_numpy(), np.array([base_mean]*len(latest)))
         out[col] = {"psi_vs_mean": psi_val, "latest_mean": float(latest[col].mean())}
