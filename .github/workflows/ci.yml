@@ -9,6 +9,5 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install -r requirements.txt
-      - run: python data/setup_and_load_hdb.py # create db/hdb.db
       - run: python -m ml.train # one-step train
       - run: python -m pytest -q
