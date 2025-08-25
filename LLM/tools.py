@@ -10,10 +10,12 @@ from pathlib import Path
 import pandas as pd
 from datetime import datetime, timedelta
 from ml.infer import predict as price_predict, CONF as FINCONF
+from monitoring.telemetry import timed, log_prediction
 
 ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = ROOT / "db" / "hdb.db"
 
+@timed("price_estimates", {"args": "dynamic"})
 def t_price_estimates(town: str, flat_type: str, month: str | None = None,
                       bands: tuple[str, ...] = ("low", "mid", "high")) -> dict:
     con = sqlite3.connect(DB_PATH)
@@ -55,6 +57,10 @@ def t_price_estimates(town: str, flat_type: str, month: str | None = None,
         pred["band"] = b
         out_rows.append(pred)
 
+    for row in out_rows:
+        log_prediction(town, flat_type, row["band"], row["resale_pred"], row["bto_proxy"],
+                       row["required_income"], model_version="lgbm-single-tree")
+        
     return {"tool": "price_estimates", "month": month, "town": town, "flat_type": flat_type,
             "rows": out_rows, "finance": FINCONF}
 

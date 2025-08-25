@@ -1,6 +1,7 @@
 # LLM/router.py
 import json
 from LLM.config import generate, MAX_NEW_TOKENS
+from monitoring.telemetry import log_router
 
 ROUTER_SPEC = """You are a router. Choose ONE tool or finish.
 TOOLS:
@@ -16,7 +17,9 @@ def llm_route(user_text: str) -> dict:
     out = generate(prompt, max_new_tokens=MAX_NEW_TOKENS).strip()
     try:
         start, end = out.index("{"), out.rindex("}") + 1
-        return json.loads(out[start:end])
-    except Exception:
-        # fallback default: price estimates with guessed args
+        obj = json.loads(out[start:end])
+        log_router(True, obj.get("tool"), out, None)
+        return obj
+    except Exception as e:
+        log_router(False, None, out, repr(e))
         return {"tool": "price_estimates", "args": {"town": "ANG MO KIO", "flat_type": "4 ROOM"}}

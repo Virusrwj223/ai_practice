@@ -164,6 +164,14 @@ def train_and_save(df: pd.DataFrame):
             "MAPE_mean": float(bt["MAPE"].mean()) if len(bt) else None,
         }
     }
+
+    ref = {}
+    ref["num_means"] = df[["floor_area_sqm","storey_mid","flat_age","remaining_lease_years"]].mean().to_dict()
+    ref["num_stds"]  = df[["floor_area_sqm","storey_mid","flat_age","remaining_lease_years"]].std().to_dict()
+    ref["cat_freqs_town"] = (df["town"].value_counts(normalize=True).to_dict())
+    ref["cat_freqs_flat_type"] = (df["flat_type"].value_counts(normalize=True).to_dict())
+    meta["reference"] = ref
+
     (MODEL_DIR / "model_meta.json").write_text(json.dumps(meta, indent=2))
     print("Saved models to", MODEL_DIR)
 
